@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="358.0" prefWidth="615.0" style="-fx-background-color: #B8E0D2;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lk.ijse.liveChatRoom.controller.LoginFormController">
+   <children>
+      <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="187.0" layoutY="98.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../img/login.png" />
+         </image>
+      </ImageView>
+      <TextField fx:id="txtUserName" alignment="CENTER" layoutX="35.0" layoutY="270.0" prefHeight="45.0" prefWidth="454.0" promptText="Enter your username" style="-fx-background-radius: 10;">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </TextField>
+      <ImageView fx:id="loginButton" fitHeight="79.0" fitWidth="75.0" layoutX="506.0" layoutY="255.0" onMouseClicked="#btnLoginOnAction" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../img/loginButton.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="84.0" fitWidth="84.0" layoutX="14.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../img/liveChatIcon.png" />
+         </image>
+      </ImageView>
+   </children>
+</AnchorPane>
