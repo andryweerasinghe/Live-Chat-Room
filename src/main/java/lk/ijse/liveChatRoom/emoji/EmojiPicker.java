@@ -39,6 +39,8 @@ public class EmojiPicker extends VBox {
         // Create the emoji picker hBox
         HBox hBox = new HBox(emojiListView);
         hBox.setPadding(new Insets(10));
+        hBox.setStyle("-fx-background-color: #e0e0e0; -fx-padding: 10px; -fx-border-color: #cccccc; -fx-border-width: 1px;");
+
 
         // Set the picker hBox to the EmojiPicker
         getChildren().add(hBox);

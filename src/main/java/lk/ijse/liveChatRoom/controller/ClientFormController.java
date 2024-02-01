@@ -102,9 +102,8 @@ public class ClientFormController implements Initializable {
         FileChooser.ExtensionFilter filteredImage = new FileChooser.ExtensionFilter("Image Files", ".png", ".jpg", "*.jpeg");
         fileChooser.getExtensionFilters().add(filteredImage);
         File selectedFile = fileChooser.showOpenDialog(new Stage());
-//        sendImage(selectedFile);
         if (selectedFile != null) {
-            // Display a confirmation dialog
+            // Asking for confirmation
             Alert confirmationDialog = new Alert(Alert.AlertType.CONFIRMATION);
             confirmationDialog.setTitle("Image Confirmation");
             confirmationDialog.setHeaderText("Do you want to send the selected image?");
@@ -116,13 +115,6 @@ public class ClientFormController implements Initializable {
                 sendImage(selectedFile.getAbsolutePath());
             }
         }
-//        FileDialog dialog = new FileDialog((Frame)null, "Select File to Open");
-//        dialog.setMode(FileDialog.LOAD);
-//        dialog.setVisible(true);
-//        String file = dialog.getDirectory()+dialog.getFile();
-//        dialog.dispose();
-//        sendImage(file);
-//        System.out.println(file + " chosen.");
     }
 
     @FXML
@@ -283,7 +275,7 @@ public class ClientFormController implements Initializable {
         EmojiPicker emojiPicker = new EmojiPicker();
 
         VBox vBox = new VBox(emojiPicker);
-        vBox.setPrefSize(150,300);
+        vBox.setPrefSize(300,300);
         vBox.setLayoutX(400);
         vBox.setLayoutY(175);
         vBox.setStyle("-fx-font-size: 30");

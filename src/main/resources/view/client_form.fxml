@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="anchorPane" prefHeight="600.0" prefWidth="646.0" style="-fx-background-color: #B8E0D2;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="anchorPane" prefHeight="600.0" prefWidth="646.0" style="-fx-background-color: #44A1A0;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <TextField fx:id="enterMessageField" layoutX="107.0" layoutY="539.0" prefHeight="35.0" prefWidth="447.0" promptText="Enter your message..." />
       <JFXButton contentDisplay="GRAPHIC_ONLY" layoutX="547.0" layoutY="536.0" maxWidth="35.0" onAction="#imageInsertBtnOnAction" prefHeight="35.0">
@@ -49,12 +49,12 @@
             </ImageView>
          </graphic>
       </JFXButton>
-      <ImageView fitHeight="84.0" fitWidth="84.0" layoutX="14.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="84.0" fitWidth="84.0" layoutX="14.0" layoutY="14.0" opacity="0.8" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../img/liveChatIcon.png" />
          </image>
       </ImageView>
-      <Label layoutX="136.0" layoutY="29.0" prefHeight="55.0" prefWidth="558.0" text="PLAY_TECH (PVT) LTD." textFill="#5f77a4">
+      <Label layoutX="136.0" layoutY="29.0" prefHeight="55.0" prefWidth="558.0" text="PLAY_TECH (PVT) LTD." textFill="#eae1df">
          <font>
             <Font name="Monospaced Bold" size="40.0" />
          </font>
