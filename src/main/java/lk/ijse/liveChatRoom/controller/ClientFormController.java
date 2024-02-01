@@ -7,6 +7,10 @@
 
 package lk.ijse.liveChatRoom.controller;
 import com.jfoenix.controls.JFXButton;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import lk.ijse.liveChatRoom.emoji.EmojiPicker;
 
 import javafx.application.Platform;
@@ -29,13 +33,14 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
 import java.awt.*;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.Socket;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class ClientFormController implements Initializable {
@@ -65,7 +70,7 @@ public class ClientFormController implements Initializable {
             @Override
             public void run() {
                 try {
-                    socket = new Socket("localhost", 3001);
+                    socket = new Socket("localhost", 3002);
                     dataInputStream = new DataInputStream(socket.getInputStream());
                     dataOutputStream = new DataOutputStream(socket.getOutputStream());
                     System.out.println("Client Connected");
@@ -91,14 +96,33 @@ public class ClientFormController implements Initializable {
     }
 
     @FXML
-    void imageInsertBtnOnAction(ActionEvent event) {
-        FileDialog dialog = new FileDialog((Frame)null, "Select File to Open");
-        dialog.setMode(FileDialog.LOAD);
-        dialog.setVisible(true);
-        String file = dialog.getDirectory()+dialog.getFile();
-        dialog.dispose();
-        sendImage(file);
-        System.out.println(file + " chosen.");
+    void imageInsertBtnOnAction(ActionEvent event) throws IOException {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Select Image File");
+        FileChooser.ExtensionFilter filteredImage = new FileChooser.ExtensionFilter("Image Files", ".png", ".jpg", "*.jpeg");
+        fileChooser.getExtensionFilters().add(filteredImage);
+        File selectedFile = fileChooser.showOpenDialog(new Stage());
+//        sendImage(selectedFile);
+        if (selectedFile != null) {
+            // Display a confirmation dialog
+            Alert confirmationDialog = new Alert(Alert.AlertType.CONFIRMATION);
+            confirmationDialog.setTitle("Image Confirmation");
+            confirmationDialog.setHeaderText("Do you want to send the selected image?");
+            confirmationDialog.setContentText("Selected Image: " + selectedFile.getName());
+
+            Optional<ButtonType> result = confirmationDialog.showAndWait();
+
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                sendImage(selectedFile.getAbsolutePath());
+            }
+        }
+//        FileDialog dialog = new FileDialog((Frame)null, "Select File to Open");
+//        dialog.setMode(FileDialog.LOAD);
+//        dialog.setVisible(true);
+//        String file = dialog.getDirectory()+dialog.getFile();
+//        dialog.dispose();
+//        sendImage(file);
+//        System.out.println(file + " chosen.");
     }
 
     @FXML
@@ -106,15 +130,15 @@ public class ClientFormController implements Initializable {
         sendMsg(enterMessageField.getText());
     }
 
-    private void sendMsg(String msgToSend) {
-        if (!msgToSend.isEmpty()){
-            if (!msgToSend.matches(".*\\.(png|jpe?g|gif)$")){
+    private void sendMsg(String imgToSend) {
+        if (!imgToSend.isEmpty()){
+            if (!imgToSend.matches(".*\\.(png|jpe?g|gif)$")){
 
                 HBox hBox = new HBox();
                 hBox.setAlignment(Pos.CENTER_RIGHT);
                 hBox.setPadding(new Insets(5, 5, 0, 10));
 
-                Text text = new Text(msgToSend);
+                Text text = new Text(imgToSend);
                 text.setStyle("-fx-font-size: 14");
                 TextFlow textFlow = new TextFlow(text);
 
@@ -139,7 +163,7 @@ public class ClientFormController implements Initializable {
 
 
                 try {
-                    dataOutputStream.writeUTF(clientName + "-" + msgToSend);
+                    dataOutputStream.writeUTF(clientName + "-" + imgToSend);
                     dataOutputStream.flush();
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -153,26 +177,52 @@ public class ClientFormController implements Initializable {
         // cleanup code here...
         ServerFormController.receiveMessage(clientName+" left.");
     }
-    private void sendImage(String msgToSend) {
-        Image image = new Image(msgToSend);
-        ImageView imageView = new ImageView(image);
-        imageView.setFitHeight(200);
-        imageView.setFitWidth(200);
-//        TextFlow textFlow = new TextFlow(imageView);
-        HBox hBox = new HBox();
-        hBox.setPadding(new Insets(5,5,5,10));
-        hBox.getChildren().add(imageView);
-        hBox.setAlignment(Pos.CENTER_RIGHT);
-
-        vBox.getChildren().add(hBox);
-
+//    private void sendImage(Image imgToSend) {
+//        ImageView imageView = new ImageView(imgToSend);
+//        imageView.setFitHeight(200);
+//        imageView.setFitWidth(200);
+////        TextFlow textFlow = new TextFlow(imageView);
+//        HBox hBox = new HBox();
+//        hBox.setPadding(new Insets(5,5,5,10));
+//        hBox.getChildren().add(imageView);
+//        hBox.setAlignment(Pos.CENTER_RIGHT);
+//
+//        vBox.getChildren().add(hBox);
+//
+//        try {
+//            dataOutputStream.writeUTF(clientName + "-" +imgToSend);
+//            dataOutputStream.flush();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
+    private void sendImage(String imagePath) {
         try {
-            dataOutputStream.writeUTF(clientName + "-" +msgToSend);
+            // Read the image into a byte array
+            byte[] imageBytes = Files.readAllBytes(Paths.get(imagePath));
+
+            // Send the image data to the server
+            dataOutputStream.writeInt(imageBytes.length);
+            dataOutputStream.write(imageBytes);
             dataOutputStream.flush();
+
+            // Display the image locally on the client
+            Image image = new Image(new ByteArrayInputStream(imageBytes));
+            ImageView imageView = new ImageView(image);
+            imageView.setFitHeight(200);
+            imageView.setFitWidth(200);
+
+            HBox hBox = new HBox();
+            hBox.setPadding(new Insets(5, 5, 5, 10));
+            hBox.getChildren().add(imageView);
+            hBox.setAlignment(Pos.CENTER_RIGHT);
+
+            vBox.getChildren().add(hBox);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
     public static void receiveMessage(String msg, VBox vBox) throws IOException {
         if (msg.matches(".*\\.(png|jpe?g|gif)$")){
             HBox hBoxName = new HBox();
